@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cek Hasil Seleksi Lomba</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+      color: #fff;
+    }
+
+    /* BACKGROUND FOTO DINAMIS */
+    .background-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 5px;
+      z-index: -2;
+      overflow: hidden;
+    }
+
+    .background-row {
+      display: flex;
+      width: max-content;
+      height: 33.33vh;
+      gap: 5px;
+    }
+
+    .row-1 {
+      animation: scrollLeftToRight 40s linear infinite;
+    }
+
+    .row-2 {
+      animation: scrollRightToLeft 45s linear infinite;
+      justify-content: flex-end;
+    }
+
+    .row-3 {
+      animation: scrollLeftToRight 50s linear infinite;
+    }
+
+    @keyframes scrollLeftToRight {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-100% + 100vw)); }
+    }
+
+    @keyframes scrollRightToLeft {
+      0% { transform: translateX(calc(-100% + 100vw)); }
+      100% { transform: translateX(0); }
+    }
+
+    .background-grid img {
+      width: 250px;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 10s ease-in-out, opacity 10s;
+      animation: floatImage 60s ease-in-out infinite;
+      opacity: 0.8;
+      border-radius: 10px;
+    }
+
+    @keyframes floatImage {
+      0%, 100% { transform: scale(1) translateY(0); }
+      25% { transform: scale(1.05) translateY(-5px); }
+      50% { transform: scale(1.03) translateY(5px); }
+      75% { transform: scale(1.06) translateY(-8px); }
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(30,30,30,0.9));
+      z-index: -1;
+    }
+
+    /* ANIMASI TEKS BERGRADIEN */
+    .header-text h1 {
+      background: linear-gradient(90deg, #ff4d4d, #f9cb28, #ff4d4d);
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: gradient 3s linear infinite;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* ANIMASI TOMBOL */
+    button {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+    }
+
+    /* ANIMASI HASIL SELEKSI */
+    .result-animation {
+      animation: fadeInUp 1s both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .letterhead {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      gap: 20px;
+      color: #000;
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+    }
+
+    .logo {
+      height: 100px;
+      width: 100px;
+      object-fit: contain;
+      display: block;
+      background-color: white;
+      padding: 5px;
+      border-radius: 8px;
+      transition: transform 0.7s ease;
+    }
+
+    .logo:hover {
+      transform: rotate(360deg);
+    }
+
+    .header-text {
+      flex: 1;
+      min-width: 0;
+      text-align: center;
+    }
+
+    .header-text h1 {
+      margin: 5px 0;
+      font-size: 1.5rem;
+    }
+
+    .header-text p {
+      margin: 5px 0;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.95);
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+      color: #000;
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    input {
+      width: 80%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #2ecc71;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      margin: 15px 0;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #27ae60;
+    }
+
+    .result-link {
+      display: block;
+      margin: 25px auto;
+      padding: 15px;
+      background: #f1f1f1;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: bold;
+      transition: all 0.3s;
+      max-width: 80%;
+    }
+
+    .result-link:hover {
+      background: #e1e1e1;
+      transform: translateY(-2px);
+    }
+
+    .lolos { color: #27ae60; }
+    .tidak-lolos { color: #e74c3c; }
+    .hidden { display: none; }
+
+    /* MUSIC CONTROLS */
+    .music-controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.8);
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .music-controls i {
+      font-size: 24px;
+      color: #333;
+    }
+
+    @media (min-width: 601px) {
+      .letterhead {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .logo {
+        height: 80px;
+        width: 80px;
+      }
+      input, .result-link {
+        width: 90%;
+      }
+      .background-grid img {
+        width: 150px;
+      }
+    }
+  </style>
+  <!-- Add Font Awesome for music icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <!-- Background Particles Canvas -->
+  <canvas id="particles" style="position:fixed; top:0; left:0; z-index:-3;"></canvas>
+
+  <div class="background-grid">
+    <div class="background-row row-1">
+      <img src="https://i.imgur.com/OM3fbcZ.jpg" alt="bg1">
+      <img src="https://i.imgur.com/VY32ThT.jpg" alt="bg2">
+      <img src="https://i.imgur.com/wRpFo9d.jpg" alt="bg3">
+      <img src="https://i.imgur.com/Q8ZvgDq.jpg" alt="bg4">
+      <img src="https://i.imgur.com/IO7Arlu.jpg" alt="bg5">
+      <img src="https://i.imgur.com/QVxg9QW.jpg" alt="bg6">
+      <!-- Duplicate images for seamless looping -->
+      <img src="https://i.imgur.com/OM3fbcZ.jpg" alt="bg1">
+      <img src="https://i.imgur.com/VY32ThT.jpg" alt="bg2">
+      <img src="https://i.imgur.com/wRpFo9d.jpg" alt="bg3">
+      <img src="https://i.imgur.com/Q8ZvgDq.jpg" alt="bg4">
+      <img src="https://i.imgur.com/IO7Arlu.jpg" alt="bg5">
+      <img src="https://i.imgur.com/QVxg9QW.jpg" alt="bg6">
+    </div>
+    <div class="background-row row-2">
+      <img src="https://i.imgur.com/QVxg9QW.jpg" alt="bg6">
+      <img src="https://i.imgur.com/IO7Arlu.jpg" alt="bg5">
+      <img src="https://i.imgur.com/Q8ZvgDq.jpg" alt="bg4">
+      <img src="https://i.imgur.com/wRpFo9d.jpg" alt="bg3">
+      <img src="https://i.imgur.com/VY32ThT.jpg" alt="bg2">
+      <img src="https://i.imgur.com/OM3fbcZ.jpg" alt="bg1">
+      <!-- Duplicate images for seamless looping -->
+      <img src="https://i.imgur.com/QVxg9QW.jpg" alt="bg6">
+      <img src="https://i.imgur.com/IO7Arlu.jpg" alt="bg5">
+      <img src="https://i.imgur.com/Q8ZvgDq.jpg" alt="bg4">
+      <img src="https://i.imgur.com/wRpFo9d.jpg" alt="bg3">
+      <img src="https://i.imgur.com/VY32ThT.jpg" alt="bg2">
+      <img src="https://i.imgur.com/OM3fbcZ.jpg" alt="bg1">
+    </div>
+    <div class="background-row row-3">
+      <img src="https://i.imgur.com/OM3fbcZ.jpg" alt="bg1">
+      <img src="https://i.imgur.com/VY32ThT.jpg" alt="bg2">
+      <img src="https://i.imgur.com/wRpFo9d.jpg" alt="bg3">
+      <img src="https://i.imgur.com/Q8ZvgDq.jpg" alt="bg4">
+      <img src="https://i.imgur.com/IO7Arlu.jpg" alt="bg5">
+      <img src="https://i.imgur.com/QVxg9QW.jpg" alt="bg6">
+      <!-- Duplicate images for seamless looping -->
+      <img src="https://i.imgur.com/OM3fbcZ.jpg" alt="bg1">
+      <img src="https://i.imgur.com/VY32ThT.jpg" alt="bg2">
+      <img src="https://i.imgur.com/wRpFo9d.jpg" alt="bg3">
+      <img src="https://i.imgur.com/Q8ZvgDq.jpg" alt="bg4">
+      <img src="https://i.imgur.com/IO7Arlu.jpg" alt="bg5">
+      <img src="https://i.imgur.com/QVxg9QW.jpg" alt="bg6">
+    </div>
+  </div>
+  <div class="overlay"></div>
+
+  <div class="letterhead">
+    <img src="https://i.imgur.com/PSsv3E6.jpg" alt="Logo Candrabirawa" class="logo">
+    <div class="header-text">
+      <h1>SELAMAT DATANG!!!</h1>
+      <p>CALON PESERTA UNTUK CBPP SELEKSI LOMBA</p>
+      <p>SURVIVAL XXIX KWARCAB JEPARA 2025</p>
+    </div>
+    <img src="https://i.imgur.com/wRFb4Dj.jpg" alt="Logo Padma Pertiwi" class="logo">
+  </div>
+
+  <div class="card">
+    <h2>Cek Hasil Seleksi Lomba</h2>
+    <p>Masukkan data dan nomor peserta:</p>
+    <input type="text" id="nama" placeholder="Nama Lengkap">
+    <input type="text" id="nomor" placeholder="Nomor Peserta">
+    <button onclick="generateLink()">Dapatkan Link</button>
+  </div>
+
+  <div id="resultContainer" class="card hidden">
+    <h2>Hasil Seleksi</h2>
+    <div id="status"></div>
+    <p id="pesan"></p>
+    <a id="whatsappLink" class="result-link" target="_blank" rel="noopener">
+      Klik untuk bergabung di WhatsApp
+    </a>
+  </div>
+
+  <!-- Music Controls -->
+  <div class="music-controls" onclick="toggleMusic()">
+    <i id="musicIcon" class="fas fa-music"></i>
+  </div>
+
+  <!-- Background Music -->
+  <audio id="backgroundMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    const pesertaLolos = ["1001", "1003", "1005", "1010", "1020"];
+    const grupWhatsApp = {
+      lolos: {
+        link: "https://chat.whatsapp.com/H3zc2J7bNUL96M5OOYHHyR",
+        nama: "Grup Peserta Lolos Survival XXIX 2025",
+        pesan: "Selamat! Anda telah lolos seleksi. Jagalah kekompakan dan keseriusan, SEMOGA SUKSES!"
+      },
+      tidakLolos: {
+        link: "https://chat.whatsapp.com/IeRBMD7PwekCkyZoHYYY7J",
+        nama: "Grup Tim Sukses Peserta Survival XIIX 2025",
+        pesan: "Jangan bersedih hati, masih ada kesempatan lain. TETAP SEMANGAT!"
+      }
+    };
+
+    function generateLink() {
+      const nama = document.getElementById("nama").value.trim();
+      const nomor = document.getElementById("nomor").value.trim();
+      const resultContainer = document.getElementById("resultContainer");
+      const statusElement = document.getElementById("status");
+      const pesanElement = document.getElementById("pesan");
+      const whatsappLink = document.getElementById("whatsappLink");
+
+      if (!nama || !nomor) {
+        alert("Harap isi nama dan nomor peserta!");
+        return;
+      }
+
+      resultContainer.classList.remove("hidden");
+      resultContainer.classList.add("result-animation");
+
+      const isLolos = pesertaLolos.includes(nomor);
+      const grup = isLolos ? grupWhatsApp.lolos : grupWhatsApp.tidakLolos;
+
+      statusElement.innerHTML = isLolos 
+        ? <span class="lolos">LOLOS</span> - Selamat ${nama}! 
+        : <span class="tidak-lolos">TIDAK LOLOS</span> - ${nama};
+
+      pesanElement.textContent = grup.pesan;
+      whatsappLink.href = grup.link;
+      whatsappLink.textContent = Gabung ${grup.nama} (Klik Disini);
+
+      resultContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    document.getElementById("nomor").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") generateLink();
+    });
+
+    // Music Control Functions
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    const musicIcon = document.getElementById('musicIcon');
+    
+    backgroundMusic.volume = 0.3;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      const playPromise = backgroundMusic.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.log("Autoplay prevented:", error);
+          musicIcon.classList.add('fa-music-slash');
+        });
+      }
+    });
+    
+    function toggleMusic() {
+      if (backgroundMusic.paused) {
+        backgroundMusic.play();
+        musicIcon.classList.remove('fa-music-slash');
+        musicIcon.classList.add('fa-music');
+      } else {
+        backgroundMusic.pause();
+        musicIcon.classList.remove('fa-music');
+        musicIcon.classList.add('fa-music-slash');
+      }
+    }
+
+    // Particle Animation
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const colors = ['#ff4d4d', '#f9cb28', '#2ecc71', '#3498db'];
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 5 + 1;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.speedX = Math.random() * 3 - 1.5;
+        this.speedY = Math.random() * 3 - 1.5;
+      }
+      
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        
+        if (this.size > 0.2) this.size -= 0.01;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function init() {
+      for (let i = 0; i < 50; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+        
+        if (particles[i].size <= 0.2) {
+          particles.splice(i, 1);
+          particles.push(new Particle());
+        }
+      }
+      
+      requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      for (let i = 0; i < 3; i++) {
+        particles.push(new Particle());
+        particles[particles.length - 1].x = e.clientX;
+        particles[particles.length - 1].y = e.clientY;
+      }
+    });
+  </script>
+</body>
+</html>
