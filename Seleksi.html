@@ -145,8 +145,7 @@
 
     .letterhead {
       display: flex;
-      flex-direction: row;
-	justify-content: space-between;
+      flex-direction: column;
       align-items: center;
       margin-bottom: 20px;
       padding: 15px;
@@ -332,20 +331,18 @@
       100% { transform: rotate(360deg); }
     }
 
-    @media (min-width: 600px) {
+    @media (min-width: 601px) {
       .letterhead {
         flex-direction: row;
-	flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
+        justify-content: space-between;
+        align-items: center;
       }
     }
 
     @media (max-width: 600px) {
       .logo {
-        height: 70px;
-        width: 70px;
-	margin: 0 10px;
+        height: 80px;
+        width: 80px;
       }
       input, .result-link {
         width: 90%;
@@ -354,19 +351,6 @@
         width: 150px;
       }
     }
-	@media (max-width: 600px) {
-  .header-text {
-    order: -1; /* Memaksa teks ke posisi atas */
-    flex: 0 0 100%; /* Membuat teks mengambil lebar penuh */
-    margin-bottom: 10px; /* Jarak tambahan bawah */
-  }
-}
-	@media (max-width: 600px) {
-  .logo {
-    margin: 0 10px; /* Jarak horizontal antar logo */
-  }
-}
-
   </style>
   <!-- Add Font Awesome for music icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
