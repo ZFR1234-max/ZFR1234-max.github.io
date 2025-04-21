@@ -664,5 +664,60 @@
     <div>Website developed with ❤ by <strong>Tim PURNA CBPP SMANCA</strong></div>
     <div style="font-size: 11px; margin-top: 5px;">© 2025 Kwarcab Jepara - All rights reserved</div>
   </footer>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+  // Fungsi ledakan confetti otomatis bersih
+  function triggerSelfCleaningConfetti() {
+    // Konfigurasi dasar
+    const duration = 3000; // 3 detik
+    const end = Date.now() + duration;
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#f9cb28', '#2ecc71'];
+    
+    // Fungsi rekursif untuk animasi
+    function frame() {
+      // Ledakan dari kiri
+      confetti({
+        particleCount: 10,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: colors,
+        shapes: ['circle', 'square']
+      });
+      
+      // Ledakan dari kanan
+      confetti({
+        particleCount: 10,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: colors,
+        shapes: ['circle', 'square']
+      });
+      
+      // Ledakan dari tengah (opsional)
+      if (Date.now() < end - 1500) {
+        confetti({
+          particleCount: 10,
+          spread: 100,
+          startVelocity: 30,
+          origin: { y: 0.6 },
+          colors: colors
+        });
+      }
+      
+      // Lanjutkan animasi sampai waktu habis
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }
+    
+    // Mulai animasi
+    frame();
+  }
+
+  // Panggil fungsi ini saat peserta lolos
+	triggerSelfCleaningConfetti();
+</script>
 </body>
 </html>
