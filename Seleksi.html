@@ -215,6 +215,15 @@
       border-radius: 8px;
       transition: transform 0.7s ease;
     }
+	.logo {
+  /* ... kode existing ... */
+  animation: float 3s ease-in-out infinite;
+}
+
+	@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+}	
 
     .logo:hover {
       transform: rotate(360deg) scale(1.1);
@@ -465,6 +474,60 @@
       z-index: 999;
       overflow: hidden;
     }
+/* Tambahkan di bagian CSS Anda */
+.contact-section {
+  position: fixed;
+  bottom: 80px;
+  left: 20px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.contact-btn:hover {
+  transform: scale(1.1) translateY(-5px);
+}
+
+.whatsapp-btn {
+  background: #25D366;
+}
+
+.instagram-btn {
+  background: #E1306C;
+}
+
+.tiktok-btn {
+  background: #000000;
+}
+
+/* Untuk tampilan mobile */
+@media (max-width: 600px) {
+  .contact-section {
+    bottom: 70px;
+    left: 10px;
+  }
+  
+  .contact-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+}
   </style>
   <!-- Add Font Awesome for music icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -795,19 +858,57 @@
     });
   </script>
   
-  <footer style="
-    position: fixed;
-    bottom: 10px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    color: rgba(255,255,255,0.7);
-    font-size: 12px;
-    z-index: 100;
-  ">
-    <div>Website developed with ❤ by <strong>Tim PURNA CBPP SMANCA</strong></div>
-    <div style="font-size: 11px; margin-top: 5px;">© 2025 Kwarcab Jepara - All rights reserved</div>
-  </footer>
+  <!-- Tambahkan sebelum </body> -->
+<div class="contact-section">
+  <!-- WhatsApp -->
+  <a href="https://wa.me/6285694923261?text=Halo,%20saya%20ingin%20bertanya%20tentang%20seleksi%20lomba%20Survival%20XXX" 
+     class="contact-btn whatsapp-btn" 
+     target="_blank"
+     title="Hubungi via WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <!-- Instagram -->
+  <a href="https://www.instagram.com/scout_smanca/" 
+     class="contact-btn instagram-btn" 
+     target="_blank"
+     title="Kunjungi Instagram Kami">
+    <i class="fab fa-instagram"></i>
+  </a>
+  
+  <!-- TikTok -->
+  <a href="https://www.tiktok.com/@scoutsmanca_cbpp" 
+     class="contact-btn tiktok-btn" 
+     target="_blank"
+     title="Kunjungi TikTok Kami">
+    <i class="fab fa-tiktok"></i>
+  </a>
+</div>
+
+<footer style="
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  z-index: 99; /* Lebih rendah dari tombol kontak */
+">
+  <div>Website developed with ❤ by <strong>Tim PURNA CBPP SMANCA</strong></div>
+  <div style="font-size: 11px; margin-top: 5px;">© 2025 Kwarcab Jepara - All rights reserved</div>
+  <div style="margin-top: 10px;">
+    <a href="https://wa.me/6285694923261" style="color: #25D366; text-decoration: none;" target="_blank">
+      <i class="fab fa-whatsapp"></i> Contact Person
+    </a> | 
+    <a href="https://www.instagram.com/scout_smanca/" style="color: #E1306C; text-decoration: none;" target="_blank">
+      <i class="fab fa-instagram"></i> Instagram
+    </a> | 
+    <a href="https://www.tiktok.com/@scoutsmanca_cbpp" style="color: #000; text-decoration: none;" target="_blank">
+      <i class="fab fa-tiktok"></i> TikTok
+    </a>
+  </div>
+</footer>
   
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
