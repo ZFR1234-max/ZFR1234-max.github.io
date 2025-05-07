@@ -215,15 +215,15 @@
       border-radius: 8px;
       transition: transform 0.7s ease;
     }
-	.logo {
-  /* ... kode existing ... */
-  animation: float 3s ease-in-out infinite;
-}
+    .logo {
+      /* ... kode existing ... */
+      animation: float 3s ease-in-out infinite;
+    }
 
-	@keyframes float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(5deg); }
-}	
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }	
 
     .logo:hover {
       transform: rotate(360deg) scale(1.1);
@@ -474,60 +474,77 @@
       z-index: 999;
       overflow: hidden;
     }
-/* Tambahkan di bagian CSS Anda */
-.contact-section {
-  position: fixed;
-  bottom: 80px;
-  left: 20px;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
 
-.contact-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 24px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
+    /* Tambahkan di bagian CSS Anda */
+    .contact-section {
+      position: fixed;
+      bottom: 80px;
+      left: 20px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-.contact-btn:hover {
-  transform: scale(1.1) translateY(-5px);
-}
+    .contact-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
 
-.whatsapp-btn {
-  background: #25D366;
-}
+    .contact-btn:hover {
+      transform: scale(1.1) translateY(-5px);
+    }
 
-.instagram-btn {
-  background: #E1306C;
-}
+    .whatsapp-btn {
+      background: #25D366;
+    }
 
-.tiktok-btn {
-  background: #000000;
-}
+    .instagram-btn {
+      background: #E1306C;
+    }
 
-/* Untuk tampilan mobile */
-@media (max-width: 600px) {
-  .contact-section {
-    bottom: 70px;
-    left: 10px;
-  }
-  
-  .contact-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-  }
-}
+    .tiktok-btn {
+      background: #000000;
+    }
+
+    /* Untuk tampilan mobile */
+    @media (max-width: 600px) {
+      .contact-section {
+        bottom: 70px;
+        left: 10px;
+      }
+      
+      .contact-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
+    }
+
+    /* Tambahan untuk pesan error */
+    #errorMessage {
+      color: #e74c3c;
+      font-size: 14px;
+      margin: 5px 0;
+      display: none;
+      animation: shake 0.5s;
+      font-weight: 500;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
   </style>
   <!-- Add Font Awesome for music icon -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -606,7 +623,8 @@
     <h2>Cek Hasil Seleksi Lomba</h2>
     <p>Masukkan data dan nomor peserta:</p>
     <input type="text" id="nama" placeholder="Nama Lengkap">
-    <input type="text" id="nomor" placeholder="Nomor Peserta">
+    <input type="text" id="nomor" placeholder="Contoh: cb-05 atau pp-16">
+    <div id="errorMessage" style="color: #e74c3c; font-size: 14px; margin: 5px 0; display: none;"></div>
     <button onclick="generateLink()">Konfirmasi Sekarang!!!</button>
   </div>
 
@@ -646,6 +664,83 @@
         pesan: "Jangan bersedih hati, masih ada kesempatan lain. TETAP SEMANGAT!"
       }
     };
+
+    // Fungsi untuk memvalidasi format nomor peserta
+    function validateNomorPeserta(nomor) {
+      // Pola regex untuk validasi format
+      const polaCB = /^cb-\d{1,2}$/i; // Format cb-1 atau cb-01
+      const polaPP = /^pp-\d{1,2}$/i; // Format pp-1 atau pp-01
+      
+      return polaCB.test(nomor) || polaPP.test(nomor);
+    }
+
+    function generateLink() {
+      const nama = document.getElementById("nama").value.trim();
+      const nomor = document.getElementById("nomor").value.trim().toLowerCase(); // Konversi ke lowercase untuk konsistensi
+      const errorMessage = document.getElementById("errorMessage");
+      const resultContainer = document.getElementById("resultContainer");
+      const statusElement = document.getElementById("status");
+      const pesanElement = document.getElementById("pesan");
+      const whatsappLink = document.getElementById("whatsappLink");
+      const loadingSpinner = document.getElementById("loadingSpinner");
+
+      // Reset pesan error
+      errorMessage.style.display = "none";
+
+      if (!nama || !nomor) {
+        errorMessage.textContent = "Harap isi nama dan nomor peserta!";
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      // Validasi format nomor peserta
+      if (!validateNomorPeserta(nomor)) {
+        errorMessage.textContent = "Format nomor peserta tidak valid!\nContoh format yang benar: cb-05 atau pp-16";
+        errorMessage.style.display = "block";
+        return;
+      }
+
+      // Show loading spinner
+      loadingSpinner.style.display = "flex";
+      
+      // Simulate processing delay (2 seconds)
+      setTimeout(() => {
+        resultContainer.classList.remove("hidden");
+        resultContainer.classList.add("result-animation");
+
+        const isLolos = pesertaLolos.includes(nomor);
+        const grup = isLolos ? grupWhatsApp.lolos : grupWhatsApp.tidakLolos;
+
+        statusElement.innerHTML = isLolos 
+          ? `<span class="lolos">LOLOS</span> - Selamat ${nama}!` 
+          : `<span class="tidak-lolos">TIDAK LOLOS</span> - ${nama}`;
+
+        pesanElement.textContent = grup.pesan;
+        whatsappLink.href = grup.link;
+        whatsappLink.textContent = `Gabung ${grup.nama} (Klik Disini)`;
+
+        // Jika lolos, tampilkan confetti
+        if (isLolos) {
+          triggerSelfCleaningConfetti();
+          
+          // Mainkan suara celebrasi
+          const celebrationSound = new Howl({
+            src: ['https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3'],
+            volume: 0.7
+          });
+          celebrationSound.play();
+        }
+
+        // Hide loading spinner
+        loadingSpinner.style.display = "none";
+        
+        resultContainer.scrollIntoView({ behavior: 'smooth' });
+      }, 2000);
+    }
+
+    document.getElementById("nomor").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") generateLink();
+    });
 
     // Inisialisasi Howler.js
     const sound = new Howl({
@@ -725,62 +820,6 @@
           card.style.transform = 'translateY(0)';
         }
       });
-    });
-
-    function generateLink() {
-      const nama = document.getElementById("nama").value.trim();
-      const nomor = document.getElementById("nomor").value.trim();
-      const resultContainer = document.getElementById("resultContainer");
-      const statusElement = document.getElementById("status");
-      const pesanElement = document.getElementById("pesan");
-      const whatsappLink = document.getElementById("whatsappLink");
-      const loadingSpinner = document.getElementById("loadingSpinner");
-
-      if (!nama || !nomor) {
-        alert("Harap isi nama dan nomor peserta!");
-        return;
-      }
-
-      // Show loading spinner
-      loadingSpinner.style.display = "flex";
-      
-      // Simulate processing delay (2 seconds)
-      setTimeout(() => {
-        resultContainer.classList.remove("hidden");
-        resultContainer.classList.add("result-animation");
-
-        const isLolos = pesertaLolos.includes(nomor);
-        const grup = isLolos ? grupWhatsApp.lolos : grupWhatsApp.tidakLolos;
-
-        statusElement.innerHTML = isLolos 
-          ? `<span class="lolos">LOLOS</span> - Selamat ${nama}!` 
-          : `<span class="tidak-lolos">TIDAK LOLOS</span> - ${nama}`;
-
-        pesanElement.textContent = grup.pesan;
-        whatsappLink.href = grup.link;
-        whatsappLink.textContent = `Gabung ${grup.nama} (Klik Disini)`;
-
-        // Jika lolos, tampilkan confetti
-        if (isLolos) {
-          triggerSelfCleaningConfetti();
-          
-          // Mainkan suara celebrasi
-          const celebrationSound = new Howl({
-            src: ['https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3'],
-            volume: 0.7
-          });
-          celebrationSound.play();
-        }
-
-        // Hide loading spinner
-        loadingSpinner.style.display = "none";
-        
-        resultContainer.scrollIntoView({ behavior: 'smooth' });
-      }, 2000);
-    }
-
-    document.getElementById("nomor").addEventListener("keypress", function(e) {
-      if (e.key === "Enter") generateLink();
     });
 
     // Particle Animation
